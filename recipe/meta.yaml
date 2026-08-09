@@ -36,10 +36,12 @@ source:
       - patches/0003-add-ldl-to-libstdc___la_LDFLAGS.patch
       - patches/0004-Hardcode-HAVE_ALIGNED_ALLOC-1-in-libstdc-v3-configur.patch
       {% elif cross_target_platform.startswith("win-") %}
-      # for GCC 16: https://github.com/msys2/MINGW-packages/tree/2386f7b596fed897fa1f0dcdc56743251b47361c/mingw-w64-gcc
+      # for GCC 16: https://github.com/msys2/MINGW-packages/tree/7b6eb939f726f20e88ae6f3579f75e5b8631bd31/mingw-w64-gcc
       #             + a revert of https://github.com/msys2/MINGW-packages/commit/7d132b0972c81c65893eaa4a6e7b2e7436b2d6cf
+      #             see #222 resp https://github.com/msys2/MINGW-packages/pull/29280 for alternative to revert
       # for GCC 15: https://github.com/msys2/MINGW-packages/tree/f59921184b35858d4ceb91679578de0d62475cbf/mingw-w64-gcc
       # for GCC 14: https://github.com/msys2/MINGW-packages/tree/331bf945d21af562d228ed46bda21c8272d1e76e/mingw-w64-gcc
+      - patches/mingw/{{ gcc_maj_ver }}/0002-i386-Keep-SEH-enabled-for-Win64-sysv_abi-functions.patch           # [gcc_maj_ver == 16]
       - patches/mingw/{{ gcc_maj_ver }}/0003-Windows-Follow-Posix-dir-exists-semantics-more-close.patch
       - patches/mingw/{{ gcc_maj_ver }}/0005-Windows-Don-t-ignore-native-system-header-dir.patch
       - patches/mingw/{{ gcc_maj_ver }}/0007-Build-EXTRA_GNATTOOLS-for-Ada.patch
@@ -48,6 +50,9 @@ source:
       - patches/mingw/{{ gcc_maj_ver }}/0012-Handle-spaces-in-path-for-default-manifest.patch
       - patches/mingw/{{ gcc_maj_ver }}/0014-gcc-9-branch-clone_function_name_1-Retain-any-stdcall-suffix.patch
       - patches/mingw/{{ gcc_maj_ver }}/0020-libgomp-Don-t-hard-code-MS-printf-attributes.patch
+      - patches/mingw/{{ gcc_maj_ver }}/0023-Ada-Don-t-export-gnat1-s-symbols-on-PE-hosts.patch                 # [gcc_maj_ver == 16]
+      - patches/mingw/{{ gcc_maj_ver }}/0024-libgfortran-Guard-locale-restoration-for-formatted-I0.patch        # [gcc_maj_ver == 16]
+      - patches/mingw/{{ gcc_maj_ver }}/0025-libgfortran-Copy-LC_NUMERIC-string-for-formatted-IO.patch          # [gcc_maj_ver == 16]
       - patches/mingw/{{ gcc_maj_ver }}/0140-gcc-diagnostic-color.patch
       - patches/mingw/{{ gcc_maj_ver }}/0200-add-m-no-align-vector-insn-option-for-i386.patch
       - patches/mingw/{{ gcc_maj_ver }}/2001-fix-building-rust-on-mingw-w64.patch
