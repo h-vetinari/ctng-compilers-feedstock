@@ -59,7 +59,8 @@ source:
       - patches/mingw/{{ gcc_maj_ver }}/3001-fix-codeview-crashes.patch                                         # [gcc_maj_ver == 16]
       - patches/mingw/{{ gcc_maj_ver }}/9002-native-tls.patch                                                   # [gcc_maj_ver == 15]
       {% elif cross_target_platform.startswith("osx-") %}
-      # all patches from https://github.com/Homebrew/formula-patches/tree/d1a4ad9bcd210b9721a55370d6dd67e303b7b1fb/gcc
+      # all patches from https://github.com/Homebrew/formula-patches/tree/4a334d2f90f786c3fc86cbc9cf72b2f13961b078/gcc
+      #                + https://github.com/iains/gcc-darwin-arm64/pull/154 for GCC 16
       # in case of several patches per version, use newest one
       - patches/macos/gcc-{{ version }}.diff
       # from https://github.com/JuliaPackaging/Yggdrasil/blob/master/0_RootFS/GCCBootstrap%4014/bundled/patches/gcc/gcc1420-Increase-fallback-min-macOS-version-for-libgcc-to-10.8.patch
