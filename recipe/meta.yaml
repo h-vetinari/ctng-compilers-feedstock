@@ -1,5 +1,5 @@
 {% set version = gcc_version %}
-{% set build_num = 3 %}
+{% set build_num = 4 %}
 
 {% if gcc_maj_ver is not defined %}
 {% set gcc_maj_ver = 15 %}
@@ -26,7 +26,7 @@ source:
   - url: 
       #- https://ftp.gnu.org/gnu/gcc/gcc-{{ version }}/gcc-{{ version }}.tar.gz
       - https://mirrors.ocf.berkeley.edu/gnu/gcc/gcc-{{ version }}/gcc-{{ version }}.tar.gz
-    sha256: 48be131b8c719db967cf0265a0ccb0cab2a3b224d5bb42f84904f0c1744213e6   # [gcc_version == "16.1.0"]
+    sha256: 071d00a097579e5ef7ce97fc4a9e58e73fd3503c0a013c765c970370a5a53b9b   # [gcc_version == "16.2.0"]
     sha256: d6c1a7d2da0f2a3bc52c7d02fdd4a531ead78fd694dd31cae1ca532cf5e2b7e3   # [gcc_version == "15.3.0"]
     sha256: f35aa1c7f14e6bbe5a7fab83abcb7813449aa1dc6d38bbf27b74614dee17db5e   # [gcc_version == "14.4.0"]
     patches:
@@ -36,25 +36,31 @@ source:
       - patches/0003-add-ldl-to-libstdc___la_LDFLAGS.patch
       - patches/0004-Hardcode-HAVE_ALIGNED_ALLOC-1-in-libstdc-v3-configur.patch
       {% elif cross_target_platform.startswith("win-") %}
-      # for GCC 16: https://github.com/msys2/MINGW-packages/tree/2386f7b596fed897fa1f0dcdc56743251b47361c/mingw-w64-gcc
-      #             + a revert of https://github.com/msys2/MINGW-packages/commit/7d132b0972c81c65893eaa4a6e7b2e7436b2d6cf
+      # for GCC 16: https://github.com/msys2/MINGW-packages/tree/fc4afbaccc4fc855b2c96a881cc1a5bc81ab41d2/mingw-w64-gcc
       # for GCC 15: https://github.com/msys2/MINGW-packages/tree/f59921184b35858d4ceb91679578de0d62475cbf/mingw-w64-gcc
       # for GCC 14: https://github.com/msys2/MINGW-packages/tree/331bf945d21af562d228ed46bda21c8272d1e76e/mingw-w64-gcc
+      - patches/mingw/{{ gcc_maj_ver }}/0002-i386-Keep-SEH-enabled-for-Win64-sysv_abi-functions.patch           # [gcc_maj_ver == 16]
       - patches/mingw/{{ gcc_maj_ver }}/0003-Windows-Follow-Posix-dir-exists-semantics-more-close.patch
-      - patches/mingw/{{ gcc_maj_ver }}/0005-Windows-Don-t-ignore-native-system-header-dir.patch
+      - patches/mingw/{{ gcc_maj_ver }}/0005-Windows-Don-t-ignore-native-system-header-dir.patch                # [gcc_maj_ver <= 15]
       - patches/mingw/{{ gcc_maj_ver }}/0007-Build-EXTRA_GNATTOOLS-for-Ada.patch
       - patches/mingw/{{ gcc_maj_ver }}/0008-Prettify-linking-no-undefined.patch
       - patches/mingw/{{ gcc_maj_ver }}/0011-Enable-shared-gnat-implib.patch
       - patches/mingw/{{ gcc_maj_ver }}/0012-Handle-spaces-in-path-for-default-manifest.patch
       - patches/mingw/{{ gcc_maj_ver }}/0014-gcc-9-branch-clone_function_name_1-Retain-any-stdcall-suffix.patch
       - patches/mingw/{{ gcc_maj_ver }}/0020-libgomp-Don-t-hard-code-MS-printf-attributes.patch
+      - patches/mingw/{{ gcc_maj_ver }}/0021-bootstrap-gnattools-Pass-target-sysroot-flags-to-boo.patch         # [gcc_maj_ver == 16]
+      - patches/mingw/{{ gcc_maj_ver }}/0022-mingw-Remove-outdated-mingw-stuff.patch                            # [gcc_maj_ver == 16]
+      - patches/mingw/{{ gcc_maj_ver }}/0023-Ada-Don-t-export-gnat1-s-symbols-on-PE-hosts.patch                 # [gcc_maj_ver == 16]
+      - patches/mingw/{{ gcc_maj_ver }}/0024-libgfortran-Guard-locale-restoration-for-formatted-I0.patch        # [gcc_maj_ver == 16]
+      - patches/mingw/{{ gcc_maj_ver }}/0025-libgfortran-Copy-LC_NUMERIC-string-for-formatted-IO.patch          # [gcc_maj_ver == 16]
       - patches/mingw/{{ gcc_maj_ver }}/0140-gcc-diagnostic-color.patch
       - patches/mingw/{{ gcc_maj_ver }}/0200-add-m-no-align-vector-insn-option-for-i386.patch
       - patches/mingw/{{ gcc_maj_ver }}/2001-fix-building-rust-on-mingw-w64.patch
       - patches/mingw/{{ gcc_maj_ver }}/3001-fix-codeview-crashes.patch                                         # [gcc_maj_ver == 16]
       - patches/mingw/{{ gcc_maj_ver }}/9002-native-tls.patch                                                   # [gcc_maj_ver == 15]
       {% elif cross_target_platform.startswith("osx-") %}
-      # all patches from https://github.com/Homebrew/formula-patches/tree/d1a4ad9bcd210b9721a55370d6dd67e303b7b1fb/gcc
+      # all patches from https://github.com/Homebrew/formula-patches/tree/4a334d2f90f786c3fc86cbc9cf72b2f13961b078/gcc
+      #                + https://github.com/iains/gcc-darwin-arm64/pull/154 for GCC 16
       # in case of several patches per version, use newest one
       - patches/macos/gcc-{{ version }}.diff
       # from https://github.com/JuliaPackaging/Yggdrasil/blob/master/0_RootFS/GCCBootstrap%4014/bundled/patches/gcc/gcc1420-Increase-fallback-min-macOS-version-for-libgcc-to-10.8.patch
