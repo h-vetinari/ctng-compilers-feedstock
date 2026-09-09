@@ -113,7 +113,7 @@ index 1d319b77bf8..3afbee65974 100644
  /* Override startfile prefix defaults.  */
 -#ifndef STANDARD_STARTFILE_PREFIX_1
 -#define STANDARD_STARTFILE_PREFIX_1 "/mingw/lib/"
-+#if 0 /* Conda-forge always uses /usr/lib for now */
++#if !defined(STANDARD_STARTFILE_PREFIX_2) && !defined(CROSS_DIRECTORY_STRUCTURE)
 +#define STANDARD_STARTFILE_PREFIX_2 "" /* MSYS2 doesn't use /usr/lib for MINGW */
  #endif
 -#ifndef STANDARD_STARTFILE_PREFIX_2
